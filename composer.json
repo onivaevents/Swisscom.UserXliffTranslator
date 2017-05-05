@@ -1,0 +1,35 @@
+{
+    "description": "Neos Flow package for user based Xliff translation",
+    "type": "neos-package",
+    "keywords": [
+        "xliff", "localization", "translation", "translator", "l10n", "Neos", "Flow"
+    ],
+    "license": "MIT",
+    "authors" : [
+        {
+            "name": "Simon Gadient",
+            "email": "simon.gadient@swisscom.com"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/simstern/xlifftranslator.git"
+        }
+    ],
+    "require": {
+        "typo3/flow": "*",
+        "mrimann/xlifftranslator": "dev-master"
+    },
+    "name": "swisscom/userxlifftranslator",
+    "autoload": {
+        "psr-0": {
+            "Swisscom\\UserXliffTranslator": "Classes/"
+        }
+    },
+    "extra": {
+        "neos": {
+            "package-key": "Swisscom.UserXliffTranslator"
+        }
+    }
+}

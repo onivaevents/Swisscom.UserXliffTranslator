@@ -1,0 +1,3 @@
+Swisscom:
+  UserXliffTranslator:
+    userXliffBasePath: '%FLOW_PATH_DATA%Translations'

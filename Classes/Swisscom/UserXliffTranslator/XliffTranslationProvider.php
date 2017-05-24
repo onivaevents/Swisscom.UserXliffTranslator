@@ -148,7 +148,7 @@ class XliffTranslationProvider extends \TYPO3\Flow\I18n\TranslationProvider\Xlif
         $sourcePath = Files::concatenatePaths([$this->userXliffBasePath, $packageKey]);
         list($sourcePath, $foundLocale) = $this->localizationService->getXliffFilenameAndPath($sourcePath, $sourceName, $locale);
 
-        if ($sourcePath === false) {
+        if ($sourcePath === false || $foundLocale != $locale) {
             return null;
         } else {
             if (isset($this->models[$sourcePath])) {

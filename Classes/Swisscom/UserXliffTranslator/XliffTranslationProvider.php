@@ -42,10 +42,13 @@ class XliffTranslationProvider extends \TYPO3\Flow\I18n\TranslationProvider\Xlif
      */
     public function getTranslationByOriginalLabel($originalLabel, I18n\Locale $locale, $pluralForm = null, $sourceName = 'Main', $packageKey = 'TYPO3.Flow')
     {
-        $model = $this->getModel($packageKey, $sourceName, $locale);
-
-        if (! $translation = $this->getTargetBySource($model, $originalLabel, $locale, $pluralForm)) {
-            $model = parent::getModel($packageKey, $sourceName, $locale);
+		$translation = false;
+		$customModel = $this->getModel($packageKey, $sourceName, $locale);
+		if (is_object($customModel)) {
+			$translation = $this->getTargetBySource($customModel, $originalLabel, $locale, $pluralForm);
+		}
+		if ($translation === false) {
+			$model = parent::getModel($packageKey, $sourceName, $locale);
             $translation = $this->getTargetBySource($model, $originalLabel, $locale, $pluralForm);
         }
         return $translation;

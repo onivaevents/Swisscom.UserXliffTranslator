@@ -31,10 +31,12 @@ class Package extends BasePackage
                 $objectManager = $bootstrap->getObjectManager();
                 $configurationManager = $objectManager->get('TYPO3\Flow\Configuration\ConfigurationManager');
                 $userXliffBasePath = $configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, 'Swisscom.UserXliffTranslator.userXliffBasePath');
-                $templateFileMonitor = \TYPO3\Flow\Monitor\FileMonitor::createFileMonitorAtBoot('UserXliffTranslator_TranslationFiles', $bootstrap);
-                $templateFileMonitor->monitorDirectory($userXliffBasePath);
-                $templateFileMonitor->detectChanges();
-                $templateFileMonitor->shutdownObject();
+                if (is_dir($userXliffBasePath)) {
+                    $templateFileMonitor = \TYPO3\Flow\Monitor\FileMonitor::createFileMonitorAtBoot('UserXliffTranslator_TranslationFiles', $bootstrap);
+                    $templateFileMonitor->monitorDirectory($userXliffBasePath);
+                    $templateFileMonitor->detectChanges();
+                    $templateFileMonitor->shutdownObject();
+                }
             }
         });
         $flushTranslationCache = function ($identifier, $changedFiles) use ($bootstrap) {

@@ -26,19 +26,27 @@ class Package extends BasePackage
     {
         $dispatcher = $bootstrap->getSignalSlotDispatcher();
 
-        $dispatcher->connect(\TYPO3\Flow\Core\Booting\Sequence::class, 'afterInvokeStep', function ($step) use ($bootstrap, $dispatcher) {
-            if ($step->getIdentifier() === 'typo3.flow:systemfilemonitor') {
-                $objectManager = $bootstrap->getObjectManager();
-                $configurationManager = $objectManager->get('TYPO3\Flow\Configuration\ConfigurationManager');
-                $userXliffBasePath = $configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS, 'Swisscom.UserXliffTranslator.userXliffBasePath');
-                if (is_dir($userXliffBasePath)) {
-                    $templateFileMonitor = \TYPO3\Flow\Monitor\FileMonitor::createFileMonitorAtBoot('UserXliffTranslator_TranslationFiles', $bootstrap);
-                    $templateFileMonitor->monitorDirectory($userXliffBasePath);
-                    $templateFileMonitor->detectChanges();
-                    $templateFileMonitor->shutdownObject();
-                }
-            }
-        });
+        $context = $bootstrap->getContext();
+
+        // Flow systemfilemonitor is only available in non-production context
+        if (!$context->isProduction()) {
+            $dispatcher->connect(\TYPO3\Flow\Core\Booting\Sequence::class, 'afterInvokeStep',
+                function ($step) use ($bootstrap, $dispatcher) {
+                    if ($step->getIdentifier() === 'typo3.flow:systemfilemonitor') {
+                        $objectManager = $bootstrap->getObjectManager();
+                        $configurationManager = $objectManager->get('TYPO3\Flow\Configuration\ConfigurationManager');
+                        $userXliffBasePath = $configurationManager->getConfiguration(ConfigurationManager::CONFIGURATION_TYPE_SETTINGS,
+                            'Swisscom.UserXliffTranslator.userXliffBasePath');
+                        if (is_dir($userXliffBasePath)) {
+                            $templateFileMonitor = \TYPO3\Flow\Monitor\FileMonitor::createFileMonitorAtBoot('UserXliffTranslator_TranslationFiles',
+                                $bootstrap);
+                            $templateFileMonitor->monitorDirectory($userXliffBasePath);
+                            $templateFileMonitor->detectChanges();
+                            $templateFileMonitor->shutdownObject();
+                        }
+                    }
+                });
+        }
         $flushTranslationCache = function ($identifier, $changedFiles) use ($bootstrap) {
             if ($identifier !== 'UserXliffTranslator_TranslationFiles') {
                 return;

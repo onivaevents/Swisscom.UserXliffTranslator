@@ -39,7 +39,9 @@ class XliffTranslatorService extends \Mrimann\XliffTranslator\XliffTranslatorSer
             return $xliff;
         } else {
             $userXliff = $this->xliffParser->getParsedData($userSourcePath);
-            $userXliff['translationUnits'] = array_merge($xliff['translationUnits'], $userXliff['translationUnits']);
+            if (isset($userXliff['translationUnits'])) {
+                $userXliff['translationUnits'] = array_merge($xliff['translationUnits'], $userXliff['translationUnits']);
+            }
 
             return $userXliff;
         }
